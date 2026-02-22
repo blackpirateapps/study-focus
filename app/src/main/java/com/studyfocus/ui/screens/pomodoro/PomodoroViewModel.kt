@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
+import com.studyfocus.service.PomodoroTimerManager
 
 enum class TimerState {
     IDLE, RUNNING, PAUSED, BREAK, COMPLETED
@@ -26,8 +27,6 @@ data class PomodoroUiState(
     val isBreak: Boolean = false,
     val completedTodayCount: Int = 0
 )
-
-import com.studyfocus.service.PomodoroTimerManager
 
 @HiltViewModel
 class PomodoroViewModel @Inject constructor(
