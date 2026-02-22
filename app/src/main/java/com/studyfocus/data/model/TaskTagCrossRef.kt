@@ -4,7 +4,8 @@ import androidx.room.Entity
 
 @Entity(
     tableName = "task_tag_cross_ref",
-    primaryKeys = ["taskId", "tagId"]
+    primaryKeys = ["taskId", "tagId"],
+    indices = [androidx.room.Index("tagId")]
 )
 data class TaskTagCrossRef(
     val taskId: Long,
