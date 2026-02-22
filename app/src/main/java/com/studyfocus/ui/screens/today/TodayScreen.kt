@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun TodayScreen(
     onNavigateToPomodoro: (Long) -> Unit,
+    onNavigateToEditTask: (Long) -> Unit,
     viewModel: TodayViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -57,7 +58,7 @@ fun TodayScreen(
             ) { taskWithDetails ->
                 TaskListItem(
                     taskWithDetails = taskWithDetails,
-                    onTaskClick = { },
+                    onTaskClick = { onNavigateToEditTask(taskWithDetails.task.id) },
                     onCheckClick = {
                         viewModel.toggleTaskCompletion(
                             taskWithDetails.task.id,

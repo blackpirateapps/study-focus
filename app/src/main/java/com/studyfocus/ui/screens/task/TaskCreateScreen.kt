@@ -26,6 +26,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun TaskCreateScreen(
     projectId: Long? = null,
+    taskId: Long? = null,
     onNavigateBack: () -> Unit,
     viewModel: TaskCreateViewModel = hiltViewModel()
 ) {
@@ -38,10 +39,18 @@ fun TaskCreateScreen(
         }
     }
 
+    LaunchedEffect(taskId) {
+        if (taskId != null && taskId > 0) {
+            viewModel.loadTask(taskId)
+        }
+    }
+
+    val screenTitle = if (taskId != null && taskId > 0) "Edit Task" else "New Task"
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("New Task", style = MaterialTheme.typography.headlineSmall) },
+                title = { Text(screenTitle, style = MaterialTheme.typography.headlineSmall) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.Close, contentDescription = "Close")

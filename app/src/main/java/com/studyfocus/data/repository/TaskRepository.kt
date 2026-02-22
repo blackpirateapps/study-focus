@@ -58,6 +58,8 @@ class TaskRepository @Inject constructor(
     suspend fun updateSubtask(subtask: Subtask) = subtaskDao.updateSubtask(subtask)
 
     suspend fun deleteSubtask(subtask: Subtask) = subtaskDao.deleteSubtask(subtask)
+    
+    suspend fun deleteSubtasksByTask(taskId: Long) = subtaskDao.deleteSubtasksByTask(taskId)
 
     suspend fun setSubtaskCompleted(subtaskId: Long, isCompleted: Boolean) =
         subtaskDao.setSubtaskCompleted(subtaskId, isCompleted)

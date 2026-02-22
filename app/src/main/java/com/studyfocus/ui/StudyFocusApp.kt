@@ -94,6 +94,9 @@ fun StudyFocusApp() {
                     },
                     onNavigateToCreateTask = {
                         navController.navigate(Screen.TaskCreate.createRoute())
+                    },
+                    onNavigateToEditTask = { taskId ->
+                        navController.navigate(Screen.TaskCreate.createRoute(taskId = taskId))
                     }
                 )
             }
@@ -103,6 +106,9 @@ fun StudyFocusApp() {
                 TodayScreen(
                     onNavigateToPomodoro = { taskId ->
                         navController.navigate(Screen.Pomodoro.createRoute(taskId))
+                    },
+                    onNavigateToEditTask = { taskId ->
+                        navController.navigate(Screen.TaskCreate.createRoute(taskId = taskId))
                     }
                 )
             }
@@ -149,6 +155,9 @@ fun StudyFocusApp() {
                     },
                     onNavigateToCreateTask = {
                         navController.navigate(Screen.TaskCreate.createRoute(projectId))
+                    },
+                    onNavigateToEditTask = { taskId ->
+                        navController.navigate(Screen.TaskCreate.createRoute(taskId = taskId))
                     }
                 )
             }
@@ -160,12 +169,18 @@ fun StudyFocusApp() {
                     navArgument("projectId") {
                         type = NavType.LongType
                         defaultValue = 0L
+                    },
+                    navArgument("taskId") {
+                        type = NavType.LongType
+                        defaultValue = 0L
                     }
                 )
             ) { backStackEntry ->
                 val projectId = backStackEntry.arguments?.getLong("projectId")
+                val taskId = backStackEntry.arguments?.getLong("taskId")
                 TaskCreateScreen(
                     projectId = if (projectId != null && projectId > 0) projectId else null,
+                    taskId = if (taskId != null && taskId > 0) taskId else null,
                     onNavigateBack = { navController.popBackStack() }
                 )
             }

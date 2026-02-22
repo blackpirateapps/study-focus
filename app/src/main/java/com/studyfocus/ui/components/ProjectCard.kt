@@ -14,6 +14,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.studyfocus.ui.theme.Dimens
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.runtime.remember
+
 @Composable
 fun ProjectCard(
     name: String,
@@ -28,10 +31,16 @@ fun ProjectCard(
         MaterialTheme.colorScheme.primary
     }
 
+    val interactionSource = remember { MutableInteractionSource() }
+
     Surface(
         modifier = modifier
             .width(160.dp)
-            .clickable(onClick = onClick),
+            .clickable(
+                onClick = onClick,
+                interactionSource = interactionSource,
+                indication = null
+            ),
         shape = RoundedCornerShape(Dimens.RadiusLg),
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 0.dp,

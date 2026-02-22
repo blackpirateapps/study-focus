@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class TaskFormState(
+    val editingTaskId: Long? = null,
     val title: String = "",
     val notes: String = "",
     val dueDate: Long? = null,
@@ -23,7 +24,10 @@ data class TaskFormState(
     val subtaskTitles: List<String> = emptyList(),
     val selectedTagIds: List<Long> = emptyList(),
     val projects: List<Project> = emptyList(),
-    val tags: List<Tag> = emptyList()
+    val tags: List<Tag> = emptyList(),
+    val isCompleted: Boolean = false,
+    val completedPomodoros: Int = 0,
+    val createdAt: Long = 0L
 )
 
 @HiltViewModel
@@ -45,6 +49,33 @@ class TaskCreateViewModel @Inject constructor(
         viewModelScope.launch {
             tagRepository.getAllTags().collect { tags ->
                 _formState.update { it.copy(tags = tags) }
+            }
+        }
+    }
+
+    fun loadTask(taskId: Long) {
+        viewModelScope.launch {
+            val taskWithDetails = taskRepository.getTaskById(taskId).firstOrNull()
+            taskWithDetails?.let { detail ->
+                val task = detail.task
+                _formState.update {
+                    it.copy(
+                        editingTaskId = task.id,
+                        title = task.title,
+                        notes = task.notes,
+                        dueDate = task.dueDate,
+                        projectId = task.projectId,
+                        pomodoroCount = task.pomodoroCount,
+                        pomodoroDurationMinutes = task.pomodoroDurationMinutes,
+                        recurrenceType = task.recurrenceType,
+                        recurrenceDays = task.recurrenceDays,
+                        isCompleted = task.isCompleted,
+                        completedPomodoros = task.completedPomodoros,
+                        createdAt = task.createdAt,
+                        subtaskTitles = detail.subtasks.sortedBy { s -> s.position }.map { s -> s.title },
+                        selectedTagIds = detail.tags.map { t -> t.id }
+                    )
+                }
             }
         }
     }
@@ -91,18 +122,29 @@ class TaskCreateViewModel @Inject constructor(
         if (state.title.isBlank()) return
 
         viewModelScope.launch {
-            val taskId = taskRepository.insertTask(
-                Task(
-                    title = state.title,
-                    notes = state.notes,
-                    dueDate = state.dueDate,
-                    projectId = state.projectId,
-                    pomodoroCount = state.pomodoroCount,
-                    pomodoroDurationMinutes = state.pomodoroDurationMinutes,
-                    recurrenceType = state.recurrenceType,
-                    recurrenceDays = state.recurrenceDays
-                )
+            val task = Task(
+                id = state.editingTaskId ?: 0L,
+                title = state.title,
+                notes = state.notes,
+                dueDate = state.dueDate,
+                projectId = state.projectId,
+                pomodoroCount = state.pomodoroCount,
+                pomodoroDurationMinutes = state.pomodoroDurationMinutes,
+                recurrenceType = state.recurrenceType,
+                recurrenceDays = state.recurrenceDays,
+                isCompleted = state.isCompleted,
+                completedPomodoros = state.completedPomodoros,
+                createdAt = if (state.createdAt > 0) state.createdAt else System.currentTimeMillis()
             )
+
+            val taskId = if (state.editingTaskId != null) {
+                taskRepository.updateTask(task)
+                taskRepository.deleteSubtasksByTask(state.editingTaskId)
+                tagRepository.clearTagsForTask(state.editingTaskId)
+                state.editingTaskId
+            } else {
+                taskRepository.insertTask(task)
+            }
 
             // Insert subtasks
             state.subtaskTitles.forEachIndexed { index, title ->

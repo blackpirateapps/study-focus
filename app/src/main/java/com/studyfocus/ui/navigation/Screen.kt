@@ -46,12 +46,13 @@ sealed class Screen(
         fun createRoute(projectId: Long) = "project/$projectId"
     }
     data object TaskCreate : Screen(
-        route = "task/create?projectId={projectId}",
+        route = "task/create?projectId={projectId}&taskId={taskId}",
         title = "New Task",
         selectedIcon = Icons.Filled.Add,
         unselectedIcon = Icons.Outlined.Add
     ) {
-        fun createRoute(projectId: Long? = null) = "task/create?projectId=${projectId ?: 0}"
+        fun createRoute(projectId: Long? = null, taskId: Long? = null) = 
+            "task/create?projectId=${projectId ?: 0}&taskId=${taskId ?: 0}"
     }
 }
 

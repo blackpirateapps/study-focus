@@ -122,6 +122,7 @@ fun ProjectDetailScreen(
     onNavigateBack: () -> Unit,
     onNavigateToPomodoro: (Long) -> Unit,
     onNavigateToCreateTask: () -> Unit,
+    onNavigateToEditTask: (Long) -> Unit,
     viewModel: ProjectsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -180,7 +181,7 @@ fun ProjectDetailScreen(
                 TaskListItem(
                     taskWithDetails = taskWithDetails,
                     projectColor = projectColor,
-                    onTaskClick = { },
+                    onTaskClick = { onNavigateToEditTask(taskWithDetails.task.id) },
                     onCheckClick = {
                         viewModel.toggleTaskCompletion(
                             taskWithDetails.task.id,

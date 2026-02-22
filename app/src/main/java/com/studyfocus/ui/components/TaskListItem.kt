@@ -23,6 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.studyfocus.data.model.TaskWithDetails
 import com.studyfocus.ui.theme.Dimens
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.runtime.remember
+
 @Composable
 fun TaskListItem(
     taskWithDetails: TaskWithDetails,
@@ -40,12 +43,18 @@ fun TaskListItem(
         label = "checkColor"
     )
 
+    val interactionSource = remember { MutableInteractionSource() }
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onTaskClick),
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null, // Removes Android ripple
+                onClick = onTaskClick
+            ),
         color = MaterialTheme.colorScheme.surface,
-        shape = RoundedCornerShape(Dimens.RadiusMd),
+        shape = RoundedCornerShape(Dimens.RadiusLg),
     ) {
         Row(
             modifier = Modifier
