@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Study Focus</string>
+    <string name="notification_channel_pomodoro">Pomodoro Timer</string>
+    <string name="notification_channel_description">Shows timer progress</string>
+</resources>

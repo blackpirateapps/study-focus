@@ -1,0 +1,6 @@
+# This file intentionally left blank.
+# The keystore directory is used for the release signing key.
+# Generate a keystore with:
+#   keytool -genkeypair -v -keystore app/keystore/release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias studyfocus
+# Then base64 encode it for GitHub secrets:
+#   base64 -w 0 app/keystore/release.jks
